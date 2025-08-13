@@ -6,7 +6,7 @@ tbl-colwidths: [20,20,40,20]
 ---
 
 # Bienvenidos
-  La idea de esta página es ser una ayuda con materiales y resolución de los ejercicos del practico del curso de Introducción a los Procesos Estocásticos.
+  La idea de esta página es ser una ayuda con materiales y resolución de los ejercicos del practico del curso de Introducción a los Procesos Estocásticos. 
   
 # Calendario
 

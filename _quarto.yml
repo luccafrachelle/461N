@@ -30,6 +30,7 @@ format:
     theme:
       light: [cosmo, theme.scss]
       dark: [cosmo, theme-dark.scss]
+    embed-resources: true
     mainfont: "Atkinson Hyperlegible"
     code-copy: true
     code-overflow: wrap

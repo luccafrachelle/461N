@@ -1,5 +1,15 @@
 [
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Introducción",
+    "section": "",
+    "text": "Bienvenidos\nLa idea de esta página es ser una ayuda con materiales y resolución de los ejercicos del practico del curso de Introducción a los Procesos Estocásticos.\n\n\nCalendario\n\n\n\n\n\n\n\n\n\nSemana\nFecha\nTema\nNota\n\n\n\n\n1\n19-Aug-25 Tue\n• Presentación• Introducción procesos estocásticos• Problema de la ruina\n\n\n\n\n21-Aug-25 Thu\n• Recurrencia para proba de ruina• Ecuaciones en diferencias• Fórmula para proba de ruina• Límite cuando \\(S=\\infty\\)\nP1\n\n\n2\n26-Aug-25 Tue\n• Duración media del juego• Recurrencia para duración media• Fórmula para duración media• Límite cuando \\(S=\\infty\\)\nP1\n\n\n\n28-Aug-25 Thu",
+    "crumbs": [
+      "Introducción"
+    ]
+  },
+  {
     "objectID": "practico1-solucion.html",
     "href": "practico1-solucion.html",
     "title": "Soluciones Practico 1",
@@ -22,21 +32,22 @@
     ]
   },
   {
+    "objectID": "practico1-solucion.html#ejercicio-2",
+    "href": "practico1-solucion.html#ejercicio-2",
+    "title": "Soluciones Practico 1",
+    "section": "Ejercicio 2",
+    "text": "Ejercicio 2\n\nParte a\n\nEstimación de la duración esperada del juego\n\ndef simular_duracion_juego(p: float, S: int, X0: int) -&gt; int:\n    trayectoria = [X0]\n    X = X0\n    turnos = 0\n    while (X &gt; 0) and (X &lt; S):\n        X += apuesta(p) ## funcion del ejercicio 1\n        turnos += 1\n    return turnos\n\n\ndef estimar_duracion_esperada(p: float, S: int, X0: int, N: int) -&gt; float:\n    duraciones = []\n    for _ in range(N):\n        duraciones.append(simular_duracion_juego(p, S, X0))\n    return np.mean(duraciones)\n\n\n\n(i) Duración esperada vs. capital inicial \\(X_0 = k\\)\n\np_ej2_i = 0.5\nS_ej2_i = 10\nN_ej2_i = 5000 \n\nduracion_vs_X0 = []\nfor k_val in range(S_ej2_i + 1):\n    duracion_vs_X0.append(estimar_duracion_esperada(p_ej2_i, S_ej2_i, k_val, N_ej2_i))\n\nprint(\"Duración esperada vs. Capital inicial:\", [float(d) for d in duracion_vs_X0])\n\nDuración esperada vs. Capital inicial: [0.0, 8.9504, 16.0192, 21.2636, 24.0444, 25.2224, 24.2688, 20.9532, 16.2388, 8.832, 0.0]\n\n\n\n\nCode\nplt.figure(figsize=(8,5))\nplt.plot(range(S_ej2_i + 1), duracion_vs_X0, marker='o')\nplt.title(f'Duración Esperada vs. Capital Inicial (S={S_ej2_i}, p={p_ej2_i})')\nplt.xlabel(r'Capital inicial $X_0$')\nplt.ylabel('Duración Esperada del Juego')\nplt.xticks(range(S_ej2_i + 1))\nplt.grid(True)\nplt.show()\n\n\n\n\n\n\n\n\n\n\n\n(ii) Duración esperada vs. probabilidad \\(p\\)\n\nX0_ej2_ii = 5\nS_ej2_ii = 10\nN_ej2_ii = 5000 \n\nprobabilidades = np.linspace(0.1, 0.9, 9) \nduracion_vs_p = []\nfor p_val in probabilidades:\n    duracion_vs_p.append(estimar_duracion_esperada(p_val, S_ej2_ii, X0_ej2_ii, N_ej2_ii))\n\nprint(\"Duración esperada vs. Probabilidad p:\", [float(d) for d in duracion_vs_p])\n\nDuración esperada vs. Probabilidad p: [6.232, 8.312, 12.1096, 19.4804, 24.792, 18.9076, 11.9584, 8.338, 6.246]\n\n\n\n\nCode\nplt.figure(figsize=(8,5))\nplt.plot(probabilidades, duracion_vs_p, marker='o')\nplt.title(f'Duración Esperada vs. Probabilidad p (S={S_ej2_ii}, X0={X0_ej2_ii})')\nplt.xlabel(r'Probabilidad $p$ de ganar')\nplt.ylabel('Duración Esperada del Juego')\nplt.grid(True)\nplt.show()\n\n\n\n\n\n\n\n\n\n\n\n\nParte b\nVisualizar las estimaciones de la duración esperada del juego y compararlas con las correspondientes expresiones analíticas.\n\nFunciones analíticas\n\ndef prob_ruina_analitica(p: float, S: int, k: int) -&gt; float:\n    q = 1 - p\n    if p == 0.5:\n        return (S - k) / S\n    else:\n        ratio = q / p\n        return (ratio**k - ratio**S) / (1 - ratio**S)\n\n\n\nCode\ndef duracion_esperada_analitica(p: float, S: int, k: int) -&gt; float:\n    q = 1 - p\n    if p == 0.5:\n        return k * (S - k)\n    else:\n        prob_ganar_analitica = 1 - prob_ruina_analitica(p, S, k)\n        if p != q:\n            return (k / (q - p)) - (S / (q - p)) * ((1 - (q / p)**k) / (1 - (q / p)**S))\n        else:\n            return k * (S - k)\n\n\n\n\n(i) Duración esperada vs. capital inicial \\(X_0 = k\\) (Comparación)\n\nduracion_analitica_X0 = []\nfor k_val in range(S_ej2_i + 1):\n    duracion_analitica_X0.append(duracion_esperada_analitica(p_ej2_i, S_ej2_i, k_val))\n\nprint(\"Duración analítica vs. Capital inicial:\", [float(d) for d in duracion_analitica_X0])\n\nDuración analítica vs. Capital inicial: [0.0, 9.0, 16.0, 21.0, 24.0, 25.0, 24.0, 21.0, 16.0, 9.0, 0.0]\n\n\n\n\nCode\nplt.figure(figsize=(10,6)) \nplt.plot(range(S_ej2_i + 1), duracion_vs_X0, marker='o', label='Simulado', linestyle='--')\nplt.plot(range(S_ej2_i + 1), duracion_analitica_X0, marker='x', label='Analítico', linestyle='-')\nplt.title(f'Comparación Duración Esperada vs. Capital Inicial (S={S_ej2_i}, p={p_ej2_i})')\nplt.xlabel(r'Capital inicial $X_0$')\nplt.ylabel('Duración Esperada del Juego')\nplt.xticks(range(S_ej2_i + 1))\nplt.grid(True)\nplt.legend()\nplt.show()\n\n\n\n\n\n\n\n\n\n\n\n(ii) Duración esperada vs. probabilidad \\(p\\) (Comparación)\n\nduracion_analitica_p = []\nfor p_val in probabilidades:\n    duracion_analitica_p.append(duracion_esperada_analitica(p_val, S_ej2_ii, X0_ej2_ii))\n\nprint(\"Duración analítica vs. Probabilidad p:\", [float(d) for d in duracion_analitica_p])\n\nDuración analítica vs. Probabilidad p: [6.249788314987299, 8.317073170731707, 12.14369501466276, 19.181818181818183, 25.0, 19.18181818181818, 12.143695014662754, 8.317073170731707, 6.249788314987299]\n\n\n\n\nCode\nplt.figure(figsize=(10,6))\nplt.plot(probabilidades, duracion_vs_p, marker='o', label='Simulado', linestyle='--')\nplt.plot(probabilidades, duracion_analitica_p, marker='x', label='Analítico', linestyle='-')\nplt.title(f'Comparación Duración Esperada vs. Probabilidad p (S={S_ej2_ii}, X0={X0_ej2_ii})')\nplt.xlabel(r'Probabilidad $p$ de ganar')\nplt.ylabel('Duración Esperada del Juego')\nplt.grid(True)\nplt.legend()\nplt.show()",
+    "crumbs": [
+      "Soluciones",
+      "Soluciones Practico 1"
+    ]
+  },
+  {
     "objectID": "practicos.html",
     "href": "practicos.html",
     "title": "Practicos",
     "section": "",
     "text": "Practicos\nContenido de la sección de Practicos."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Introducción",
-    "section": "",
-    "text": "Bienvenidos\nLa idea de esta página es ser una ayuda con materiales y resolución de los ejercicos del practico del curso de Introducción a los Procesos Estocásticos.\n\n\nCalendario\n\n\n\n\n\n\n\n\n\nSemana\nFecha\nTema\nNota\n\n\n\n\n1\n19-Aug-25 Tue\n• Presentación• Introducción procesos estocásticos• Problema de la ruina\n\n\n\n\n21-Aug-25 Thu\n• Recurrencia para proba de ruina• Ecuaciones en diferencias• Fórmula para proba de ruina• Límite cuando \\(S=\\infty\\)\nP1\n\n\n2\n26-Aug-25 Tue\n• Duración media del juego• Recurrencia para duración media• Fórmula para duración media• Límite cuando \\(S=\\infty\\)\nP1\n\n\n\n28-Aug-25 Thu",
-    "crumbs": [
-      "Introducción"
-    ]
   },
   {
     "objectID": "practico1-letra.html",
@@ -102,17 +113,6 @@
     "crumbs": [
       "Practicos",
       "Practico 1"
-    ]
-  },
-  {
-    "objectID": "practico1-solucion.html#ejercicio-2",
-    "href": "practico1-solucion.html#ejercicio-2",
-    "title": "Soluciones Practico 1",
-    "section": "Ejercicio 2",
-    "text": "Ejercicio 2\n\nParte a\n\nEstimación de la duración esperada del juego\n\ndef simular_duracion_juego(p: float, S: int, X0: int) -&gt; int:\n    trayectoria = [X0]\n    X = X0\n    turnos = 0\n    while (X &gt; 0) and (X &lt; S):\n        X += apuesta(p) ## funcion del ejercicio 1\n        turnos += 1\n    return turnos\n\n\ndef estimar_duracion_esperada(p: float, S: int, X0: int, N: int) -&gt; float:\n    duraciones = []\n    for _ in range(N):\n        duraciones.append(simular_duracion_juego(p, S, X0))\n    return np.mean(duraciones)\n\n\n\n(i) Duración esperada vs. capital inicial \\(X_0 = k\\)\n\np_ej2_i = 0.5\nS_ej2_i = 10\nN_ej2_i = 5000 \n\nduracion_vs_X0 = []\nfor k_val in range(S_ej2_i + 1):\n    duracion_vs_X0.append(estimar_duracion_esperada(p_ej2_i, S_ej2_i, k_val, N_ej2_i))\n\nprint(\"Duración esperada vs. Capital inicial:\", [float(d) for d in duracion_vs_X0])\n\nDuración esperada vs. Capital inicial: [0.0, 8.9504, 16.0192, 21.2636, 24.0444, 25.2224, 24.2688, 20.9532, 16.2388, 8.832, 0.0]\n\n\n\n\nCode\nplt.figure(figsize=(8,5))\nplt.plot(range(S_ej2_i + 1), duracion_vs_X0, marker='o')\nplt.title(f'Duración Esperada vs. Capital Inicial (S={S_ej2_i}, p={p_ej2_i})')\nplt.xlabel(r'Capital inicial $X_0$')\nplt.ylabel('Duración Esperada del Juego')\nplt.xticks(range(S_ej2_i + 1))\nplt.grid(True)\nplt.show()\n\n\n\n\n\n\n\n\n\n\n\n(ii) Duración esperada vs. probabilidad \\(p\\)\n\nX0_ej2_ii = 5\nS_ej2_ii = 10\nN_ej2_ii = 5000 \n\nprobabilidades = np.linspace(0.1, 0.9, 9) \nduracion_vs_p = []\nfor p_val in probabilidades:\n    duracion_vs_p.append(estimar_duracion_esperada(p_val, S_ej2_ii, X0_ej2_ii, N_ej2_ii))\n\nprint(\"Duración esperada vs. Probabilidad p:\", [float(d) for d in duracion_vs_p])\n\nDuración esperada vs. Probabilidad p: [6.232, 8.312, 12.1096, 19.4804, 24.792, 18.9076, 11.9584, 8.338, 6.246]\n\n\n\n\nCode\nplt.figure(figsize=(8,5))\nplt.plot(probabilidades, duracion_vs_p, marker='o')\nplt.title(f'Duración Esperada vs. Probabilidad p (S={S_ej2_ii}, X0={X0_ej2_ii})')\nplt.xlabel(r'Probabilidad $p$ de ganar')\nplt.ylabel('Duración Esperada del Juego')\nplt.grid(True)\nplt.show()\n\n\n\n\n\n\n\n\n\n\n\n\nParte b\nVisualizar las estimaciones de la duración esperada del juego y compararlas con las correspondientes expresiones analíticas.\n\nFunciones analíticas\n\ndef prob_ruina_analitica(p: float, S: int, k: int) -&gt; float:\n    q = 1 - p\n    if p == 0.5:\n        return (S - k) / S\n    else:\n        ratio = q / p\n        return (ratio**k - ratio**S) / (1 - ratio**S)\n\n\n\nCode\ndef duracion_esperada_analitica(p: float, S: int, k: int) -&gt; float:\n    q = 1 - p\n    if p == 0.5:\n        return k * (S - k)\n    else:\n        prob_ganar_analitica = 1 - prob_ruina_analitica(p, S, k)\n        if p != q:\n            return (k / (q - p)) - (S / (q - p)) * ((1 - (q / p)**k) / (1 - (q / p)**S))\n        else:\n            return k * (S - k)\n\n\n\n\n(i) Duración esperada vs. capital inicial \\(X_0 = k\\) (Comparación)\n\nduracion_analitica_X0 = []\nfor k_val in range(S_ej2_i + 1):\n    duracion_analitica_X0.append(duracion_esperada_analitica(p_ej2_i, S_ej2_i, k_val))\n\nprint(\"Duración analítica vs. Capital inicial:\", [float(d) for d in duracion_analitica_X0])\n\nDuración analítica vs. Capital inicial: [0.0, 9.0, 16.0, 21.0, 24.0, 25.0, 24.0, 21.0, 16.0, 9.0, 0.0]\n\n\n\n\nCode\nplt.figure(figsize=(10,6)) \nplt.plot(range(S_ej2_i + 1), duracion_vs_X0, marker='o', label='Simulado', linestyle='--')\nplt.plot(range(S_ej2_i + 1), duracion_analitica_X0, marker='x', label='Analítico', linestyle='-')\nplt.title(f'Comparación Duración Esperada vs. Capital Inicial (S={S_ej2_i}, p={p_ej2_i})')\nplt.xlabel(r'Capital inicial $X_0$')\nplt.ylabel('Duración Esperada del Juego')\nplt.xticks(range(S_ej2_i + 1))\nplt.grid(True)\nplt.legend()\nplt.show()\n\n\n\n\n\n\n\n\n\n\n\n(ii) Duración esperada vs. probabilidad \\(p\\) (Comparación)\n\nduracion_analitica_p = []\nfor p_val in probabilidades:\n    duracion_analitica_p.append(duracion_esperada_analitica(p_val, S_ej2_ii, X0_ej2_ii))\n\nprint(\"Duración analítica vs. Probabilidad p:\", [float(d) for d in duracion_analitica_p])\n\nDuración analítica vs. Probabilidad p: [6.249788314987299, 8.317073170731707, 12.14369501466276, 19.181818181818183, 25.0, 19.18181818181818, 12.143695014662754, 8.317073170731707, 6.249788314987299]\n\n\n\n\nCode\nplt.figure(figsize=(10,6))\nplt.plot(probabilidades, duracion_vs_p, marker='o', label='Simulado', linestyle='--')\nplt.plot(probabilidades, duracion_analitica_p, marker='x', label='Analítico', linestyle='-')\nplt.title(f'Comparación Duración Esperada vs. Probabilidad p (S={S_ej2_ii}, X0={X0_ej2_ii})')\nplt.xlabel(r'Probabilidad $p$ de ganar')\nplt.ylabel('Duración Esperada del Juego')\nplt.grid(True)\nplt.legend()\nplt.show()",
-    "crumbs": [
-      "Soluciones",
-      "Soluciones Practico 1"
     ]
   }
 ]
