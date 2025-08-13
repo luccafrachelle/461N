@@ -1,0 +1,318 @@
+---
+title: "Soluciones Practico 1"
+---
+
+## Ejercicio 1
+
+### Seteo el ambiente
+```{python}
+#| code-fold: true
+import numpy as np
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
+```
+
+### Parte a
+Escribir un programa mediante el cual simular y visualizar la evolución del capital del jugador A
+
+```{python}
+def apuesta(p:float):
+  if np.random.random() < p:
+    return 1
+  else:
+    return -1
+```
+
+
+```{python}
+def juego(p:float, S:int, X0:int):
+  trayectoria = [X0]
+  X = X0
+  while (X > 0) and (X < S):
+    X += apuesta(p)
+    trayectoria.append(X)
+  return trayectoria
+```
+
+
+```{python}
+p = 0.5
+S = 10
+X0 = 5
+trayectoria = juego(p, S, X0)
+```
+
+
+```{python}
+#| code-fold: true
+print('Trayectoria: ', trayectoria)
+```
+
+
+```{python}
+#| fig-align: center
+#| code-fold: true
+
+plt.figure(figsize=(8,5))
+plt.plot(trayectoria, marker='o')
+plt.title('Juego de la ruina - Una trayectoria')
+plt.ylim(-0.5, S+0.5)
+plt.axhline(y=S, linestyle='--')
+plt.axhline(y=0, linestyle='--')
+plt.xlabel(r'Turno $n$')
+plt.ylabel(r'Capital $X_n$')
+plt.show()
+```
+
+
+```{python}
+todas_trayectorias = []
+for _ in range(5):
+  todas_trayectorias.append(juego(p, S, X0))
+```
+
+
+```{python}
+#| fig-align: center
+#| code-fold: true
+plt.figure(figsize=(8,5))
+for trayectoria in todas_trayectorias:
+  plt.plot(trayectoria, marker='o')
+plt.title('Juego de la ruina - Varias trayectorias') # Added title for clarity
+plt.ylim(-0.5, S+0.5)
+plt.axhline(y=S, linestyle='--')
+plt.axhline(y=0, linestyle='--')
+plt.xlabel(r'Turno $n$')
+plt.ylabel(r'Capital $X_n$')
+plt.show()
+```
+
+### Parte b
+Desarrollar el programa anterior de manera de estimar, mediante la simulación de un número adecuado de trayectorias del capital del jugador A, la probabilidad de ruina.
+
+
+```{python}
+def probabilidad_ruina(p:float, S:int, X0:int, N:int):
+  ruinas = 0
+  for _ in range(N):
+    trayectoria = juego(p, S, X0)
+    if trayectoria[-1] == 0:
+      ruinas += 1
+  return ruinas/N
+```
+
+
+```{python}
+p = 0.7
+S = 10
+X0 = 5
+N = 10000
+print(f'Probabilidad de ruina: {probabilidad_ruina(p, S, X0, N)}')
+```
+
+
+```{python}
+fS = []
+for X0 in range(S+1):
+  fS.append(probabilidad_ruina(p, S, X0, N))
+```
+
+
+```{python}
+#| fig-align: center
+#| code-fold: true
+
+plt.figure(figsize=(8,5))
+plt.plot(fS, marker='o')
+plt.title('Probabilidad de ruina')
+plt.xlabel(r'Capital inicial $X_0$')
+plt.show()
+```
+
+### (Extra) Propiedad de Markov
+
+
+```{python}
+def probabilidad_ruina_Markov(p:float, S:int, X0:int, X1:int, N:int):
+  ruinas = 0
+  condicion = 0
+  for _ in range(N):
+    trayectoria = juego(p, S, X0)
+    if trayectoria[1] == X1:
+      condicion += 1
+      if trayectoria[-1] == 0:
+        ruinas += 1
+  return ruinas/condicion
+```
+
+
+```{python}
+p = 0.5
+S = 10
+X0 = 5
+N = 10000
+p0 = probabilidad_ruina(p, S, X0+1, N)
+p1 = probabilidad_ruina_Markov(p, S, X0, X0+1, N)
+print(f'p0: {p0}\np1: {p1}')
+```
+
+## Ejercicio 2
+
+### Parte a
+
+#### Estimación de la duración esperada del juego
+
+```{python}
+def simular_duracion_juego(p: float, S: int, X0: int) -> int:
+    trayectoria = [X0]
+    X = X0
+    turnos = 0
+    while (X > 0) and (X < S):
+        X += apuesta(p) ## funcion del ejercicio 1
+        turnos += 1
+    return turnos
+```
+
+```{python}
+def estimar_duracion_esperada(p: float, S: int, X0: int, N: int) -> float:
+    duraciones = []
+    for _ in range(N):
+        duraciones.append(simular_duracion_juego(p, S, X0))
+    return np.mean(duraciones)
+```
+
+#### (i) Duración esperada vs. capital inicial $X_0 = k$
+
+```{python}
+p_ej2_i = 0.5
+S_ej2_i = 10
+N_ej2_i = 5000 
+
+duracion_vs_X0 = []
+for k_val in range(S_ej2_i + 1):
+    duracion_vs_X0.append(estimar_duracion_esperada(p_ej2_i, S_ej2_i, k_val, N_ej2_i))
+
+print("Duración esperada vs. Capital inicial:", [float(d) for d in duracion_vs_X0])
+```
+
+```{python}
+#| fig-align: center
+#| code-fold: true
+
+plt.figure(figsize=(8,5))
+plt.plot(range(S_ej2_i + 1), duracion_vs_X0, marker='o')
+plt.title(f'Duración Esperada vs. Capital Inicial (S={S_ej2_i}, p={p_ej2_i})')
+plt.xlabel(r'Capital inicial $X_0$')
+plt.ylabel('Duración Esperada del Juego')
+plt.xticks(range(S_ej2_i + 1))
+plt.grid(True)
+plt.show()
+```
+
+#### (ii) Duración esperada vs. probabilidad $p$
+
+```{python}
+X0_ej2_ii = 5
+S_ej2_ii = 10
+N_ej2_ii = 5000 
+
+probabilidades = np.linspace(0.1, 0.9, 9) 
+duracion_vs_p = []
+for p_val in probabilidades:
+    duracion_vs_p.append(estimar_duracion_esperada(p_val, S_ej2_ii, X0_ej2_ii, N_ej2_ii))
+
+print("Duración esperada vs. Probabilidad p:", [float(d) for d in duracion_vs_p])
+```
+
+```{python}
+#| fig-align: center
+#| code-fold: true
+
+plt.figure(figsize=(8,5))
+plt.plot(probabilidades, duracion_vs_p, marker='o')
+plt.title(f'Duración Esperada vs. Probabilidad p (S={S_ej2_ii}, X0={X0_ej2_ii})')
+plt.xlabel(r'Probabilidad $p$ de ganar')
+plt.ylabel('Duración Esperada del Juego')
+plt.grid(True)
+plt.show()
+```
+
+### Parte b
+Visualizar las estimaciones de la duración esperada del juego y compararlas con las correspondientes expresiones analíticas.
+
+#### Funciones analíticas
+
+```{python}
+def prob_ruina_analitica(p: float, S: int, k: int) -> float:
+    q = 1 - p
+    if p == 0.5:
+        return (S - k) / S
+    else:
+        ratio = q / p
+        return (ratio**k - ratio**S) / (1 - ratio**S)
+```
+
+```{python}
+#| code-fold: true
+def duracion_esperada_analitica(p: float, S: int, k: int) -> float:
+    q = 1 - p
+    if p == 0.5:
+        return k * (S - k)
+    else:
+        prob_ganar_analitica = 1 - prob_ruina_analitica(p, S, k)
+        if p != q:
+            return (k / (q - p)) - (S / (q - p)) * ((1 - (q / p)**k) / (1 - (q / p)**S))
+        else:
+            return k * (S - k)
+```
+
+#### (i) Duración esperada vs. capital inicial $X_0 = k$ (Comparación)
+
+```{python}
+duracion_analitica_X0 = []
+for k_val in range(S_ej2_i + 1):
+    duracion_analitica_X0.append(duracion_esperada_analitica(p_ej2_i, S_ej2_i, k_val))
+
+print("Duración analítica vs. Capital inicial:", [float(d) for d in duracion_analitica_X0])
+```
+
+```{python}
+#| fig-align: center
+#| code-fold: true
+
+plt.figure(figsize=(10,6)) 
+plt.plot(range(S_ej2_i + 1), duracion_vs_X0, marker='o', label='Simulado', linestyle='--')
+plt.plot(range(S_ej2_i + 1), duracion_analitica_X0, marker='x', label='Analítico', linestyle='-')
+plt.title(f'Comparación Duración Esperada vs. Capital Inicial (S={S_ej2_i}, p={p_ej2_i})')
+plt.xlabel(r'Capital inicial $X_0$')
+plt.ylabel('Duración Esperada del Juego')
+plt.xticks(range(S_ej2_i + 1))
+plt.grid(True)
+plt.legend()
+plt.show()
+```
+
+#### (ii) Duración esperada vs. probabilidad $p$ (Comparación)
+
+```{python}
+duracion_analitica_p = []
+for p_val in probabilidades:
+    duracion_analitica_p.append(duracion_esperada_analitica(p_val, S_ej2_ii, X0_ej2_ii))
+
+print("Duración analítica vs. Probabilidad p:", [float(d) for d in duracion_analitica_p])
+```
+
+```{python}
+#| fig-align: center
+#| code-fold: true
+
+plt.figure(figsize=(10,6))
+plt.plot(probabilidades, duracion_vs_p, marker='o', label='Simulado', linestyle='--')
+plt.plot(probabilidades, duracion_analitica_p, marker='x', label='Analítico', linestyle='-')
+plt.title(f'Comparación Duración Esperada vs. Probabilidad p (S={S_ej2_ii}, X0={X0_ej2_ii})')
+plt.xlabel(r'Probabilidad $p$ de ganar')
+plt.ylabel('Duración Esperada del Juego')
+plt.grid(True)
+plt.legend()
+plt.show()
+```
