@@ -8,7 +8,8 @@ project:
       - practicos_letra/practicos.qmd
       - practicos_letra/practico1-letra.qmd
       - practicos_solucion/practico1-solucion.qmd
-      - clases/semana1.qmd
+      - clases/clase1.qmd
+      - calendario.qmd
 
 website:
   title: "461N"
@@ -17,7 +18,10 @@ website:
     search: true
     contents:
       - index.qmd
+      - text: "Calendario"
+        file: calendario.qmd
       - text: "Practicos"
+      
         contents:
           - practicos_letra/practico1-letra.qmd
       - text: "Soluciones"
@@ -25,7 +29,9 @@ website:
           - practicos_solucion/practico1-solucion.qmd
       - text: "Clases"
         contents:
-          - clases/semana1.qmd
+          - text: "Clase 1"
+            file: clases/clase1.qmd
+     
   page-navigation: true
 
 
@@ -42,7 +48,6 @@ format:
 
 freeze: auto
 
-date: today
 date-format: iso
 jupyter: python_venv
 

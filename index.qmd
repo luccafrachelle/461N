@@ -1,18 +1,104 @@
 ---
-title: "Introducción"
-author: "Lucca Frachelle"
-tbl-colwidths: [20,20,40,20]
-
+title: "Procesos Estocásticos 2025"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-expand: 2
 ---
 
-# Bienvenidos
-  La idea de esta página es ser una ayuda con materiales y resolución de los ejercicos del practico del curso de Introducción a los Procesos Estocásticos. 
-  
-# Calendario
+## Descripción del curso
 
-| Semana | Fecha | Tema | Nota |
-|---|---|---|---|
-| 1 | 19-Aug-25 Tue | • Presentación<br/>• Introducción procesos estocásticos<br/>• Problema de la ruina | |
-| | 21-Aug-25 Thu | • Recurrencia para proba de ruina<br/>• Ecuaciones en diferencias<br/>• Fórmula para proba de ruina<br/>• Límite cuando $S=\infty$ | [P1](practico1-letra.qmd) |
-| 2 | 26-Aug-25 Tue | • Duración media del juego<br/>• Recurrencia para duración media<br/>• Fórmula para duración media<br/>• Límite cuando $S=\infty$ | [P1](practico1-letra.qmd) |
-| | 28-Aug-25 Thu | | |
+Bienvenidos al curso de **Procesos Estocásticos IESTA-2025**. Esta página contiene todo el material del curso , la página contiente
+
+*   **Prácticos y Soluciones:**  [enunciados de los prácticos aquí](practicos_letra/practicos.qmd). Las soluciones se publicarán a medida que avance el curso.
+*   **Clases:** [apuntes de clase con  ejemplos y algunas simulaciones en R/Python](clases/clase1.qmd).
+*   **Calendario:**  [fechas relevantes + detalle de lo que se dio en cada clase](calendario.qmd).
+
+## Docentes a cargo
+
+* Matías Carrasco
+* Lucca Frachelle
+
+## Temario
+
+Este es el temario propuesto para el curso. Se podrá exonerar la parte escrita del examen si se obtiene un mínimo del 40% del total de puntos en cada revisión y un promedio de al menos 60% entre ambas revisiones.
+
+### Contenido Sintético
+1.  **Procesos estocásticos:** introducción, definiciones, ejemplos.
+2.  **Problema de la ruina**.
+3.  **Paseos aleatorios en tiempo discreto**.
+4.  **Martingalas**.
+5.  **Aplicaciones a la Optimización y Aproximación Estocástica**.
+6.  **Cadenas de Markov en tiempo discreto**.
+7.  **Stochastic Bandits**.
+
+### Contenido Desagregado
+1.  **Procesos estocásticos**
+    * Introducción y motivación.
+    * Definición general.
+    * Ejemplos.
+
+2.  **Problema de la ruina**
+    * Cálculo de la probabilidad de ruina.
+    * Tiempo medio de duración del juego.
+    * Recurrencia y fórmulas explicitas.
+    * Límite cuando el capital tiende a infinito.
+
+3.  **Paseos aleatorios en tiempo discreto**
+    * Principio de reflexión.
+    * Probabilidad de retorno.
+    * Tiempo medio de retorno.
+    * Distribución del primer retorno.
+
+4.  **Martingalas**
+    * Filtraciones y Esperanza Condicional.
+    * Definición, Propiedades y Ejemplos.
+    * Tiempos de parada.
+    * Teorema del muestreo opcional de Doob.
+    * Aplicaciones al problema de la ruina.
+    * Teorema de convergencia.
+
+5.  **Aplicaciones a la Optimización y Aproximación Estocástica**
+    * Teorema de Robbins-Monro.
+    * Descenso Estocástico de Gradiente.
+    * Aplicaciones en Optimización y Machine Learning.
+
+6.  **Cadenas de Markov en tiempo discreto**
+    * Propiedad de Markov, Matriz de transición, Ejemplos de CM.
+    * Cadenas absorbentes.
+    * Probabilidad y tiempo medio de absorción.
+    * Aplicaciones al problema de la ruina.
+    * Cadenas ergódicas.
+    * Tiempo de primer retorno.
+    * Número medio de retornos.
+    * Estados recurrentes y transitorios.
+    * Recurrencia positiva y nula.
+    * Periodicidad y Aperiodicidad.
+    * Distribución límite.
+    * Estacionariedad.
+    * Propiedad Fuerte de Markov.
+    * Teorema Ergódico.
+    * Aplicaciones a los Modelos de Lenguaje.
+
+7.  **Stochastic Bandits**
+    * Formulación del problema clásico.
+    * *Regret* esperado y cotas.
+    * Algoritmos: $\epsilon$-greedy, UCB, Thompson Sampling.
+    * Comparaciones empíricas.
+    * Aplicaciones modernas.
+
+## Evaluación
+
+El sistema de evaluación incluye dos revisiones. La primera tiene un puntaje máximo de 50 y mínimo de 20, mientras que la segunda también tiene un máximo de 50 y un mínimo de 20. La calificación total es de 100 puntos, con un mínimo de 60 para aprobar.
+
+### Fechas de revisión
+
+* **Primera revisión:** 10 de octubre de 2025
+* **Segunda revisión:** 04 de diciembre de 2025
+
+## Bibliografía
+* Lanchier, Nicolas. *Stochastic modeling*. Berlin: Springer, 2017.
+* Privault, Nicolas (2013). *Understanding Markov Chains. Examples and Applications*, Springer, ISBN 978-981-4451-51-2 (eBook).
+* Petrov and Mordecki. *Teoría de la probabilidad*. Dirac, 2008.
+* Walton, Neil. *Stochastic Control*. (2021).

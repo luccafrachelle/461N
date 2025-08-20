@@ -1,0 +1,514 @@
+---
+title: "Clase 1"
+author: "Lucca Frachelle"
+tbl-colwidths: [20,20,40,20]
+format:
+  html:
+    documentclass: article
+    packages:
+      - amsmath
+      - amssymb
+      - tikz
+      - tikz-cd
+code-fold: true
+warning: false
+---
+
+# Introducción
+
+Asumimos de base un espacio de probabilidad $(\Omega, \mathcal{F}, \mathbb{P})$, donde:
+
+-   $\Omega$: espacio muestral
+
+-   $\mathcal{F}$: $\sigma$-álgebra de eventos
+
+    -   $\Omega \in \mathcal{F}$
+    -   si $A \in \mathcal{F} \Rightarrow A^c \in \mathcal{F}$
+    -   si $\{A_n\}_{n \ge 1}$ en $\mathcal{F} \Rightarrow \bigcup_{n \ge 1} A_n \in \mathcal{F}$
+
+-   $\mathbb{P}: \mathcal{F} \rightarrow [0,1]$ función de probabilidad, tal que:
+
+    -   $\mathbb{P}(\Omega)=1$
+
+    -   $\sigma$-aditividad: $\{A_n\} \in \mathcal{F}$ incompatibles $2 \ a \ 2$
+
+$\qquad \Rightarrow \mathbb{P}(\bigcup_{n \ge 1} A_n) = \sum_{n \ge 1} \mathbb{P}(A_n)$
+
+# Def Proceso Estocástico
+
+-   Conjunto de índices $I$ en el curso ($I = T$)
+-   Conjunto de estados $S$ ($S = S_1, S_2, \dots, S_n$) con $(S , \Omega)$
+
+Un proceso estocástico es una colección de "variables aleatorias" a valores en $S$, indexadas en $I \colon \{X_i : i \in I\}$
+
+En el curso típicamente $S \in \mathbb{R}$ o a un conjunto finito cualquiera
+
+OBS : Cuando trabajamos con V.A $X : \Omega \rightarrow \mathbb{R}$ lo que nos interesa no es la función sino la distribución.
+
+OBS2 : $\#I = \infty$
+
+Propiedad:
+
+La distribución de un proceso estocástico $\{X_i : i \in I\}$ estacaracterizada por las distribuciones finito dimensiones.
+
+Tomar la cantidad finita de indices $i_1, i_2, \dots, i_n$ y mirar la distriubción conjunta de $X_{i_1}, X_{i_2}, \dots \in \mathbb{R}$
+
+# Clasificación de Procesos Estocásticos
+
+En el curso siempre $\mathcal{I} = T$ tiempo
+
+## Tiempo:
+
+-   **Discreto**: $T=\{0, 1, 2, ...\}=\mathbb{N}_0=\{0, 1, 2, ...\}$
+    -   por ej: CMTO
+-   **Continuo**: $T = [0, +\infty)$
+    -   por ej: Proceso de Poisson
+
+## Estados:
+
+-   Discretos
+-   Continuos
+
+# Ejemplo de Proceso Estocástico
+
+### Ejemplo:
+
+-   $A, B$ dos poblaciones
+-   $F(x)$ distribución de la población $A$ (desconocida)
+-   $G(x)$ distribución de la población $B$ (desconocida)
+-   $\alpha = \int_{-\infty}^{+\infty} x dF(x)$ (esperanza de A)
+-   $\beta = \int_{-\infty}^{+\infty} x dG(x)$ (esperanza de B)
+
+En concreto: Suponemos que A y B son monedas: $X_i = \begin{cases} \text{Gano \$1 si sale cara} \\ \text{Gano \$0 si sale número} \end{cases}$
+
+Pregunta: ¿Cómo obtengo una muestra que maximice $S_T = X_1 + X_2 + ... + X_T$?
+
+Regla 0: elijo al azar una moneda ($q=P(A)$, $1-q=P(B)$) y luego tiro siempre esta moneda
+
+$\{X_i\}_{i \ge 1}$ es iid?
+
+Pueden ser id pero no independientes.
+
+$E[X_i] = q\alpha + (1-q)\beta = p$
+
+Con probaiblidad $q$ tiro A y con probaiblidad $1-q$ tiro
+
+\begin{array}{rcl}
+q & \to & A \dots \alpha \\
+1-q & \to & B \dots \beta
+\end{array}
+
+
+son idénticamente distribuidas $\sim Ber(p)$
+
+Veamos si son independientes... 
+
+$Cov(X_i, X_j) = E[X_i X_j] - E[X_i] E[X_j]$
+
+Dejo las cuentas aca para no ocupar tanto espacio
+
+<details>
+
+<summary>*cuentas*</summary>
+
+$= q\alpha^2 + (1-q)\beta^2 - (q\alpha + (1-q)\beta)^2 = q\alpha^2 + \beta^2 - q\beta^2 - (q^2\alpha^2 + (1-q)^2\beta^2 + 2q(1-q)\alpha\beta)$ $= q\alpha^2 + \beta^2 - q\beta^2 - q^2\alpha^2 - (1-q)^2\beta^2 - 2q(1-q)\alpha\beta$ $= q(\alpha^2 - q\alpha^2) - (1-q)^2\beta^2 + \beta^2 - q\beta^2 - 2q(1-q)\alpha\beta$ $= q(1-q)\alpha^2 + \beta^2(1 - q - (1-q)^2) - 2q(1-q)\alpha\beta$ $= q(1-q)\alpha^2 + \beta^2(1-q)(1-(1-q)) - 2q(1-q)\alpha\beta$ $= q(1-q)\alpha^2 + q(1-q)\beta^2 - 2q(1-q)\alpha\beta$ $= q(1-q)(\alpha^2 + \beta^2 - 2\alpha\beta) = q(1-q)(\alpha - \beta)^2$
+
+</details>
+
+Se llega a que : $Cov(X_i, X_j) = q(1-q)(\alpha - \beta)^2 \implies$ Son iid solo si: $q \in \{0,1\}$ o $\alpha=\beta$
+
+Salvo casos triviales tengo procesos no iid. Los casos triviales tienen sentido ya que si $q=1$ o $q=0$ siempre se tira la misma poneda que es la que tiene probabilidad 1 de salir y ese proceso es indistinguible a tener una moneda sola y tirarla por lo que tiene sentido que sea iid.
+
+En el caso que $\alpha=\beta$ tiene sentido que sea iid ya que la moneda A y B son el mismo tipo de moneda por lo que es indistinguible de agarrar uan moneda sola y tirarla.
+
+### Regla 1:
+
+1)  Elijo al azar una moneda
+
+2)  
+
+    -   Si sale cara me quedo con esa moneda
+
+-   Si sale número cambio de moneda
+
+Es una cadena de Markov: la probabilidad de mi siguiente paso depende únicamente del instante actual.
+
+En general esperamos que $X_{t+1}$ dependa de toda la historia pasada $X_1, ..., X_t$.
+
+Ilustración de la regla de decisón
+![grafo](../pics/grafo_clase1.png)
+
+### Regla $\varepsilon$-greedy:
+
+#### Descripción del algoritmo
+La regla $\varepsilon$-greedy es una estrategia para resolver el dilema de la exploración vs. la explotación en la toma de decisiones. El algoritmo toma una decisión en cada paso basada en un valor $\varepsilon$ (épsilon), que se describe como un número pequeño que puede disminuir con el tiempo.
+
+* Con una alta probabilidad de $1-\varepsilon$, el algoritmo elige la opción que tiene la mayor recompensa estimada hasta el momento, es decir, el argmax de $\{\hat{\alpha}_T, \hat{\beta}_T\}$. Esta fase se conoce como **explotación**, ya que se enfoca en maximizar la recompensa con lo que ya se conoce.
+
+* Con una baja probabilidad de $\varepsilon$, el algoritmo elige una opción al azar. Esta fase se conoce como **exploración**, ya que permite al algoritmo descubrir si hay otras opciones que podrían ofrecer una mejor recompensa a largo plazo.
+
+$\varepsilon \in (0,1)$ (bien chiquito, cada vez más)
+Llevamos registro de la opción elegida $O_i = \begin{cases} A \\ B \end{cases}$
+
+$$
+\hat{\alpha}_T = \frac{1}{T_A} \sum_{i=1}^{T} X_i \mathbb{1}_{\{O_i = A\}}, \quad (T_A = \sum_{i=1}^{T} \mathbb{1}_{\{O_i=A\}})
+$$
+$$
+\hat{\beta}_T = \frac{1}{T_B} \sum_{i=1}^{T} X_i \mathbb{1}_{\{O_i = B\}}, \quad (T_B = \sum_{i=1}^{T} \mathbb{1}_{\{O_i=B\}})
+$$
+
+Con probabilidad $1-\varepsilon$ elijo $\text{argmax}_{\{A,B\}} \{\hat{\alpha}_T, \hat{\beta}_T\}$.
+
+Con probabilidad $\varepsilon$ elijo una moneda al azar.
+
+
+# Simulación $\varepsilon$-greedy:
+
+
+## Simulación
+```{r}
+#| output: false
+library(tidyverse)
+library(tidyr)
+simular_regla_greedy <- function(alpha, beta, epsilon, T) {
+  
+  # incializacion de las variables
+  victorias_A <- 0
+  tiradas_A <- 0
+  victorias_B <- 0
+  tiradas_B <- 0
+  
+  # aca se guardan los resultads
+  resultados <- data.frame(
+    tiempo = 1:T,
+    total_recompensa_greedy = numeric(T),
+    recompensa_media_A = numeric(T),
+    recompensa_media_B = numeric(T),
+    eleccion = character(T),
+    moneda_elegida = character(T),
+    recompensa = numeric(T)
+  )
+  
+  for (t in 1:T) {
+    decision <- runif(1)
+    
+    if (decision < epsilon) {
+      moneda_elegida <- sample(c("A", "B"), 1)
+      resultados$eleccion[t] <- "Exploracion"
+    } 
+    else {
+      resultados$eleccion[t] <- "Mantengo Moneda"
+      
+      if (tiradas_A == 0 && tiradas_B == 0) {
+        moneda_elegida <- sample(c("A", "B"), 1)
+      } 
+      ### me aseguro de arracnar con una tirada cada moneda 
+      else if (tiradas_A == 0) {
+        moneda_elegida <- "A"
+      } else if (tiradas_B == 0) {
+        moneda_elegida <- "B"
+      } 
+      else if ((victorias_A / tiradas_A) > (victorias_B / tiradas_B)) {
+        moneda_elegida <- "A"
+      } else {
+        moneda_elegida <- "B"
+      }
+    }
+    
+    if (moneda_elegida == "A") {
+      tiradas_A <- tiradas_A + 1
+      recompensa_greedy <- sample(c(1, 0), 1, prob = c(alpha, 1 - alpha))
+      victorias_A <- victorias_A + recompensa_greedy
+      resultados$moneda_elegida[t] <- "A"
+      resultados$recompensa[t] <- recompensa_greedy
+    } else {
+      tiradas_B <- tiradas_B + 1
+      recompensa_greedy <- sample(c(1, 0), 1, prob = c(beta, 1 - beta))
+      victorias_B <- victorias_B + recompensa_greedy
+      resultados$moneda_elegida[t] <- "B"
+      resultados$recompensa[t] <- recompensa_greedy
+    }
+    
+    resultados$total_recompensa_greedy[t] <- ifelse(t == 1, recompensa_greedy, resultados$total_recompensa_greedy[t-1] + recompensa_greedy)
+    resultados$recompensa_media_A[t] <- ifelse(tiradas_A == 0, NA, victorias_A / tiradas_A)
+    resultados$recompensa_media_B[t] <- ifelse(tiradas_B == 0, NA, victorias_B / tiradas_B)
+  }
+  
+  return(resultados)
+}
+```
+
+## Primer caso
+```{r}
+alpha_param <- 0.7  # proabilidad de ganar la moneda a
+beta_param <- 0.5   # proabilidad de ganar la moneda b
+epsilon_param <- 0.1 # proabilidad de explorar
+T_param <- 1000     # iteraciones
+
+resultados <- simular_regla_greedy(
+  alpha = alpha_param,
+  beta = beta_param,
+  epsilon = epsilon_param,
+  T = T_param
+)
+```
+
+
+```{r}
+resultados_largo <- gather(resultados, key = "moneda", value = "recompensa_media", recompensa_media_A, recompensa_media_B)
+
+resultados_largo %>% 
+  ggplot(aes(x = tiempo, y = recompensa_media, color = moneda)) +
+  geom_line(size = 1.2) +
+  geom_hline(aes(yintercept = alpha_param, color = "Verdadera A"), linetype = "dashed", size = 1) +
+  geom_hline(aes(yintercept = beta_param, color = "Verdadera B"), linetype = "dashed", size = 1) +
+  labs(title = "Estimación de Recompensa Media por Moneda",
+       x = "Paso de Tiempo",
+       y = "Recompensa Media Estimada",
+       color = "Moneda") +
+  scale_color_manual(
+    values = c("recompensa_media_A" = "blue", "recompensa_media_B" = "red", "Verdadera A" = "darkblue", "Verdadera B" = "darkred"),
+    labels = c("recompensa_media_A" = expression(hat(alpha)), "recompensa_media_B" = expression(hat(beta)), "Verdadera A" = "Verdadera A", "Verdadera B" = "Verdadera B")
+  ) +
+  theme_minimal()
+```
+
+
+
+```{r}
+resultados_conteo <- resultados %>%
+  mutate(
+    conteo_A = cumsum(moneda_elegida == "A"),
+    conteo_B = cumsum(moneda_elegida == "B")
+  ) %>%
+  select(tiempo, conteo_A, conteo_B) %>%
+  gather(key = "moneda", value = "conteo", -tiempo)
+
+resultados_conteo  %>% 
+ggplot(aes(x = tiempo, y = conteo, color = moneda)) +
+  geom_line(size = 1.2) +
+  labs(title = "Evolución de las Tiradas por Moneda",
+       subtitle = "La línea más empinada indica la moneda preferida",
+       x = "Paso de Tiempo",
+       y = "Número de Tiradas",
+       color = "Moneda") +
+  scale_color_manual(values = c("conteo_A" = "blue", "conteo_B" = "red"), labels = c("Moneda A", "Moneda B")) +
+  scale_y_continuous(breaks = seq(0, max(resultados_conteo$conteo), by = 100)) +
+
+  theme_minimal()
+```
+
+```{r}
+resultados  %>% 
+ggplot(aes(x = tiempo, y = moneda_elegida, color = factor(recompensa))) +
+  geom_point(alpha = 0.7, size = 3) +
+  labs(title = "Resultados de cada Tirada",
+       x = "Paso de Tiempo",
+       y = "Moneda Elegida",
+       color = "Resultado") +
+  scale_color_manual(values = c("1" = "green", "0" = "red"), labels = c("1" = "Cara", "0" = "Cruz")) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## Juego ligeramente desbalanceado
+```{r}
+set.seed(123)
+alpha_param <- 0.51
+beta_param <- 0.49
+epsilon_param <- 0.1
+T_param <- 2000
+
+resultados <- simular_regla_greedy(
+  alpha = alpha_param,
+  beta = beta_param,
+  epsilon = epsilon_param,
+  T = T_param
+)
+```
+```{r}
+resultados_largo <- gather(resultados, key = "moneda", value = "recompensa_media", recompensa_media_A, recompensa_media_B)
+
+resultados_largo %>% 
+  ggplot(aes(x = tiempo, y = recompensa_media, color = moneda)) +
+  geom_line(size = 1.2) +
+  geom_hline(aes(yintercept = alpha_param, color = "Verdadera A"), linetype = "dashed", size = 1) +
+  geom_hline(aes(yintercept = beta_param, color = "Verdadera B"), linetype = "dashed", size = 1) +
+  labs(title = "Estimación de Recompensa Media por Moneda",
+       x = "Paso de Tiempo",
+       y = "Recompensa Media Estimada",
+       color = "Moneda") +
+  scale_color_manual(
+    values = c("recompensa_media_A" = "blue", "recompensa_media_B" = "red", "Verdadera A" = "darkblue", "Verdadera B" = "darkred"),
+    labels = c("recompensa_media_A" = expression(hat(alpha)), "recompensa_media_B" = expression(hat(beta)), "Verdadera A" = "Verdadera A", "Verdadera B" = "Verdadera B")
+  ) +
+  theme_minimal()
+```
+
+
+```{r}
+resultados_conteo <- resultados %>%
+  mutate(
+    conteo_A = cumsum(moneda_elegida == "A"),
+    conteo_B = cumsum(moneda_elegida == "B")
+  ) %>%
+  select(tiempo, conteo_A, conteo_B) %>%
+  gather(key = "moneda", value = "conteo", -tiempo)
+
+resultados_conteo  %>% 
+ggplot(aes(x = tiempo, y = conteo, color = moneda)) +
+  geom_line(size = 1.2) +
+  labs(title = "Evolución de las Tiradas por Moneda",
+       subtitle = "La línea más empinada indica la moneda preferida",
+       x = "Paso de Tiempo",
+       y = "Número de Tiradas",
+       color = "Moneda") +
+  scale_color_manual(values = c("conteo_A" = "blue", "conteo_B" = "red"), labels = c("Moneda A", "Moneda B")) +
+  scale_y_continuous(breaks = seq(0, max(resultados_conteo$conteo), by = 100)) +
+
+  theme_minimal()
+```
+
+## Juego ligeramente desbalanceado pero con ε-greedy con decay
+
+```{r}
+
+set.seed(123)
+
+alpha_param <- 0.51
+beta_param <- 0.49
+T_param <- 1000
+
+victorias_A <- 0
+tiradas_A <- 0
+victorias_B <- 0
+tiradas_B <- 0
+
+resultados <- data.frame(
+  tiempo = 1:T_param,
+  total_recompensa_greedy = numeric(T_param),
+  recompensa_media_A = numeric(T_param),
+  recompensa_media_B = numeric(T_param),
+  eleccion = character(T_param),
+  moneda_elegida = character(T_param),
+  recompensa = numeric(T_param),
+  epsilon_usado = numeric(T_param)
+)
+
+for (t in 1:T_param) {
+ 
+  if (t < 100) {
+    epsilon <- 0.9
+  } else if (t == 100) {
+    epsilon <- 0.9
+  } else {
+    
+    decay_rate <- -log(0.001) / (T_param - 100) 
+    epsilon <- 0.9 * exp(-decay_rate * (t - 100))
+  }
+
+
+  resultados$epsilon_usado[t] <- epsilon
+  
+  
+  decision <- runif(1)
+  
+  if (decision < epsilon) {
+    moneda_elegida <- sample(c("A", "B"), 1)
+    resultados$eleccion[t] <- "Exploracion"
+  } 
+  else {
+    resultados$eleccion[t] <- "Mantengo Moneda"
+    
+    if (tiradas_A == 0 && tiradas_B == 0) {
+      moneda_elegida <- sample(c("A", "B"), 1)
+    } 
+    else if (tiradas_A == 0) {
+      moneda_elegida <- "A"
+    } else if (tiradas_B == 0) {
+      moneda_elegida <- "B"
+    } 
+    else if ((victorias_A / tiradas_A) > (victorias_B / tiradas_B)) {
+      moneda_elegida <- "A"
+    } else {
+      moneda_elegida <- "B"
+    }
+  }
+  
+
+  if (moneda_elegida == "A") {
+    tiradas_A <- tiradas_A + 1
+    recompensa_greedy <- sample(c(1, 0), 1, prob = c(alpha_param, 1 - alpha_param))
+    victorias_A <- victorias_A + recompensa_greedy
+    resultados$moneda_elegida[t] <- "A"
+    resultados$recompensa[t] <- recompensa_greedy
+  } else {
+    tiradas_B <- tiradas_B + 1
+    recompensa_greedy <- sample(c(1, 0), 1, prob = c(beta_param, 1 - beta_param))
+    victorias_B <- victorias_B + recompensa_greedy
+    resultados$moneda_elegida[t] <- "B"
+    resultados$recompensa[t] <- recompensa_greedy
+  }
+  
+  resultados$total_recompensa_greedy[t] <- ifelse(t == 1, recompensa_greedy, resultados$total_recompensa_greedy[t-1] + recompensa_greedy)
+  resultados$recompensa_media_A[t] <- ifelse(tiradas_A == 0, NA, victorias_A / tiradas_A)
+  resultados$recompensa_media_B[t] <- ifelse(tiradas_B == 0, NA, victorias_B / tiradas_B)
+}
+```
+
+```{r}
+
+resultados  %>% 
+ggplot(aes(x = tiempo, y = epsilon_usado)) +
+  geom_line(color = "blue", size = 1.2) +
+  labs(title = "Evolución del valor de Epsilon (ε)",
+       x = "Paso de Tiempo",
+       y = "Valor de Epsilon (ε)") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+```{r}
+resultados_largo <- gather(resultados, key = "moneda", value = "recompensa_media", recompensa_media_A, recompensa_media_B)
+
+resultados_largo %>% 
+  ggplot(aes(x = tiempo, y = recompensa_media, color = moneda)) +
+  geom_line(size = 1.2) +
+  geom_hline(aes(yintercept = alpha_param, color = "Verdadera A"), linetype = "dashed", size = 1) +
+  geom_hline(aes(yintercept = beta_param, color = "Verdadera B"), linetype = "dashed", size = 1) +
+  labs(title = "Estimación de Recompensa Media por Moneda",
+       x = "Paso de Tiempo",
+       y = "Recompensa Media Estimada",
+       color = "Moneda") +
+  scale_color_manual(
+    values = c("recompensa_media_A" = "blue", "recompensa_media_B" = "red", "Verdadera A" = "darkblue", "Verdadera B" = "darkred"),
+    labels = c("recompensa_media_A" = expression(hat(alpha)), "recompensa_media_B" = expression(hat(beta)), "Verdadera A" = "Verdadera A", "Verdadera B" = "Verdadera B")
+  ) +
+  theme_minimal()
+```
+
+
+```{r}
+resultados_conteo <- resultados %>%
+  mutate(
+    conteo_A = cumsum(moneda_elegida == "A"),
+    conteo_B = cumsum(moneda_elegida == "B")
+  ) %>%
+  select(tiempo, conteo_A, conteo_B) %>%
+  gather(key = "moneda", value = "conteo", -tiempo)
+
+resultados_conteo  %>% 
+ggplot(aes(x = tiempo, y = conteo, color = moneda)) +
+  geom_line(size = 1.2) +
+  labs(title = "Evolución de las Tiradas por Moneda",
+       subtitle = "La línea más empinada indica la moneda preferida",
+       x = "Paso de Tiempo",
+       y = "Número de Tiradas",
+       color = "Moneda") +
+  scale_color_manual(values = c("conteo_A" = "blue", "conteo_B" = "red"), labels = c("Moneda A", "Moneda B")) +
+  scale_y_continuous(breaks = seq(0, max(resultados_conteo$conteo), by = 100)) +
+
+  theme_minimal()
+```
+

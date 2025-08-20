@@ -4,4 +4,4 @@ title: "Practicos"
 
 # Practicos
 
-Contenido de la sección de Practicos.
+- [Practico 1](practico1-letra.qmd)

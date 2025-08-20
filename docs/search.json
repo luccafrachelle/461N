@@ -2,11 +2,11 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Introducción",
+    "title": "Procesos Estocásticos 2025",
     "section": "",
-    "text": "Bienvenidos\nLa idea de esta página es ser una ayuda con materiales y resolución de los ejercicos del practico del curso de Introducción a los Procesos Estocásticos.\n\n\nCalendario\n\n\n\n\n\n\n\n\n\nSemana\nFecha\nTema\nNota\n\n\n\n\n1\n19-Aug-25 Tue\n• Presentación• Introducción procesos estocásticos• Problema de la ruina\n\n\n\n\n21-Aug-25 Thu\n• Recurrencia para proba de ruina• Ecuaciones en diferencias• Fórmula para proba de ruina• Límite cuando \\(S=\\infty\\)\nP1\n\n\n2\n26-Aug-25 Tue\n• Duración media del juego• Recurrencia para duración media• Fórmula para duración media• Límite cuando \\(S=\\infty\\)\nP1\n\n\n\n28-Aug-25 Thu",
+    "text": "Bienvenidos al curso de Procesos Estocásticos IESTA-2025. Esta página contiene todo el material del curso , la página contiente\n\nPrácticos y Soluciones: enunciados de los prácticos aquí. Las soluciones se publicarán a medida que avance el curso.\nClases: apuntes de clase con ejemplos y algunas simulaciones en R/Python.\nCalendario: fechas relevantes + detalle de lo que se dio en cada clase.",
     "crumbs": [
-      "Introducción"
+      "Procesos Estocásticos 2025"
     ]
   },
   {
@@ -201,6 +201,153 @@
     "crumbs": [
       "Clases",
       "Semana 1"
+    ]
+  },
+  {
+    "objectID": "clases/clase1.html",
+    "href": "clases/clase1.html",
+    "title": "Clase 1",
+    "section": "",
+    "text": "Asumimos de base un espacio de probabilidad \\((\\Omega, \\mathcal{F}, \\mathbb{P})\\), donde:\n\n\\(\\Omega\\): espacio muestral\n\\(\\mathcal{F}\\): \\(\\sigma\\)-álgebra de eventos\n\n\\(\\Omega \\in \\mathcal{F}\\)\nsi \\(A \\in \\mathcal{F} \\Rightarrow A^c \\in \\mathcal{F}\\)\nsi \\(\\{A_n\\}_{n \\ge 1}\\) en \\(\\mathcal{F} \\Rightarrow \\bigcup_{n \\ge 1} A_n \\in \\mathcal{F}\\)\n\n\\(\\mathbb{P}: \\mathcal{F} \\rightarrow [0,1]\\) función de probabilidad, tal que:\n\n\\(\\mathbb{P}(\\Omega)=1\\)\n\\(\\sigma\\)-aditividad: \\(\\{A_n\\} \\in \\mathcal{F}\\) incompatibles \\(2 \\ a \\ 2\\)\n\n\n\\(\\qquad \\Rightarrow \\mathbb{P}(\\bigcup_{n \\ge 1} A_n) = \\sum_{n \\ge 1} \\mathbb{P}(A_n)\\)",
+    "crumbs": [
+      "Clases",
+      "Clase 1"
+    ]
+  },
+  {
+    "objectID": "clases/clase1.html#tiempo",
+    "href": "clases/clase1.html#tiempo",
+    "title": "Clase 1",
+    "section": "Tiempo:",
+    "text": "Tiempo:\n\nDiscreto: \\(T=\\{0, 1, 2, ...\\}=\\mathbb{N}_0=\\{0, 1, 2, ...\\}\\)\n\npor ej: CMTO\n\nContinuo: \\(T = [0, +\\infty)\\)\n\npor ej: Proceso de Poisson",
+    "crumbs": [
+      "Clases",
+      "Clase 1"
+    ]
+  },
+  {
+    "objectID": "clases/clase1.html#estados",
+    "href": "clases/clase1.html#estados",
+    "title": "Clase 1",
+    "section": "Estados:",
+    "text": "Estados:\n\nDiscretos\nContinuos",
+    "crumbs": [
+      "Clases",
+      "Clase 1"
+    ]
+  },
+  {
+    "objectID": "clases/clase1.html#simulación",
+    "href": "clases/clase1.html#simulación",
+    "title": "Clase 1",
+    "section": "Simulación",
+    "text": "Simulación\n\n\nCode\nlibrary(tidyverse)\nlibrary(tidyr)\nsimular_regla_greedy &lt;- function(alpha, beta, epsilon, T) {\n  \n  # incializacion de las variables\n  victorias_A &lt;- 0\n  tiradas_A &lt;- 0\n  victorias_B &lt;- 0\n  tiradas_B &lt;- 0\n  \n  # aca se guardan los resultads\n  resultados &lt;- data.frame(\n    tiempo = 1:T,\n    total_recompensa_greedy = numeric(T),\n    recompensa_media_A = numeric(T),\n    recompensa_media_B = numeric(T),\n    eleccion = character(T),\n    moneda_elegida = character(T),\n    recompensa = numeric(T)\n  )\n  \n  for (t in 1:T) {\n    decision &lt;- runif(1)\n    \n    if (decision &lt; epsilon) {\n      moneda_elegida &lt;- sample(c(\"A\", \"B\"), 1)\n      resultados$eleccion[t] &lt;- \"Exploracion\"\n    } \n    else {\n      resultados$eleccion[t] &lt;- \"Mantengo Moneda\"\n      \n      if (tiradas_A == 0 && tiradas_B == 0) {\n        moneda_elegida &lt;- sample(c(\"A\", \"B\"), 1)\n      } \n      ### me aseguro de arracnar con una tirada cada moneda \n      else if (tiradas_A == 0) {\n        moneda_elegida &lt;- \"A\"\n      } else if (tiradas_B == 0) {\n        moneda_elegida &lt;- \"B\"\n      } \n      else if ((victorias_A / tiradas_A) &gt; (victorias_B / tiradas_B)) {\n        moneda_elegida &lt;- \"A\"\n      } else {\n        moneda_elegida &lt;- \"B\"\n      }\n    }\n    \n    if (moneda_elegida == \"A\") {\n      tiradas_A &lt;- tiradas_A + 1\n      recompensa_greedy &lt;- sample(c(1, 0), 1, prob = c(alpha, 1 - alpha))\n      victorias_A &lt;- victorias_A + recompensa_greedy\n      resultados$moneda_elegida[t] &lt;- \"A\"\n      resultados$recompensa[t] &lt;- recompensa_greedy\n    } else {\n      tiradas_B &lt;- tiradas_B + 1\n      recompensa_greedy &lt;- sample(c(1, 0), 1, prob = c(beta, 1 - beta))\n      victorias_B &lt;- victorias_B + recompensa_greedy\n      resultados$moneda_elegida[t] &lt;- \"B\"\n      resultados$recompensa[t] &lt;- recompensa_greedy\n    }\n    \n    resultados$total_recompensa_greedy[t] &lt;- ifelse(t == 1, recompensa_greedy, resultados$total_recompensa_greedy[t-1] + recompensa_greedy)\n    resultados$recompensa_media_A[t] &lt;- ifelse(tiradas_A == 0, NA, victorias_A / tiradas_A)\n    resultados$recompensa_media_B[t] &lt;- ifelse(tiradas_B == 0, NA, victorias_B / tiradas_B)\n  }\n  \n  return(resultados)\n}",
+    "crumbs": [
+      "Clases",
+      "Clase 1"
+    ]
+  },
+  {
+    "objectID": "clases/clase1.html#primer-caso",
+    "href": "clases/clase1.html#primer-caso",
+    "title": "Clase 1",
+    "section": "Primer caso",
+    "text": "Primer caso\n\n\nCode\nalpha_param &lt;- 0.7  # proabilidad de ganar la moneda a\nbeta_param &lt;- 0.5   # proabilidad de ganar la moneda b\nepsilon_param &lt;- 0.1 # proabilidad de explorar\nT_param &lt;- 1000     # iteraciones\n\nresultados &lt;- simular_regla_greedy(\n  alpha = alpha_param,\n  beta = beta_param,\n  epsilon = epsilon_param,\n  T = T_param\n)\n\n\n\n\nCode\nresultados_largo &lt;- gather(resultados, key = \"moneda\", value = \"recompensa_media\", recompensa_media_A, recompensa_media_B)\n\nresultados_largo %&gt;% \n  ggplot(aes(x = tiempo, y = recompensa_media, color = moneda)) +\n  geom_line(size = 1.2) +\n  geom_hline(aes(yintercept = alpha_param, color = \"Verdadera A\"), linetype = \"dashed\", size = 1) +\n  geom_hline(aes(yintercept = beta_param, color = \"Verdadera B\"), linetype = \"dashed\", size = 1) +\n  labs(title = \"Estimación de Recompensa Media por Moneda\",\n       x = \"Paso de Tiempo\",\n       y = \"Recompensa Media Estimada\",\n       color = \"Moneda\") +\n  scale_color_manual(\n    values = c(\"recompensa_media_A\" = \"blue\", \"recompensa_media_B\" = \"red\", \"Verdadera A\" = \"darkblue\", \"Verdadera B\" = \"darkred\"),\n    labels = c(\"recompensa_media_A\" = expression(hat(alpha)), \"recompensa_media_B\" = expression(hat(beta)), \"Verdadera A\" = \"Verdadera A\", \"Verdadera B\" = \"Verdadera B\")\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\n\nCode\nresultados_conteo &lt;- resultados %&gt;%\n  mutate(\n    conteo_A = cumsum(moneda_elegida == \"A\"),\n    conteo_B = cumsum(moneda_elegida == \"B\")\n  ) %&gt;%\n  select(tiempo, conteo_A, conteo_B) %&gt;%\n  gather(key = \"moneda\", value = \"conteo\", -tiempo)\n\nresultados_conteo  %&gt;% \nggplot(aes(x = tiempo, y = conteo, color = moneda)) +\n  geom_line(size = 1.2) +\n  labs(title = \"Evolución de las Tiradas por Moneda\",\n       subtitle = \"La línea más empinada indica la moneda preferida\",\n       x = \"Paso de Tiempo\",\n       y = \"Número de Tiradas\",\n       color = \"Moneda\") +\n  scale_color_manual(values = c(\"conteo_A\" = \"blue\", \"conteo_B\" = \"red\"), labels = c(\"Moneda A\", \"Moneda B\")) +\n  scale_y_continuous(breaks = seq(0, max(resultados_conteo$conteo), by = 100)) +\n\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\n\nCode\nresultados  %&gt;% \nggplot(aes(x = tiempo, y = moneda_elegida, color = factor(recompensa))) +\n  geom_point(alpha = 0.7, size = 3) +\n  labs(title = \"Resultados de cada Tirada\",\n       x = \"Paso de Tiempo\",\n       y = \"Moneda Elegida\",\n       color = \"Resultado\") +\n  scale_color_manual(values = c(\"1\" = \"green\", \"0\" = \"red\"), labels = c(\"1\" = \"Cara\", \"0\" = \"Cruz\")) +\n  theme_minimal() +\n  theme(legend.position = \"bottom\")",
+    "crumbs": [
+      "Clases",
+      "Clase 1"
+    ]
+  },
+  {
+    "objectID": "clases/clase1.html#juego-ligeramente-desbalanceado",
+    "href": "clases/clase1.html#juego-ligeramente-desbalanceado",
+    "title": "Clase 1",
+    "section": "Juego ligeramente desbalanceado",
+    "text": "Juego ligeramente desbalanceado\n\n\nCode\nset.seed(123)\nalpha_param &lt;- 0.51\nbeta_param &lt;- 0.49\nepsilon_param &lt;- 0.1\nT_param &lt;- 2000\n\nresultados &lt;- simular_regla_greedy(\n  alpha = alpha_param,\n  beta = beta_param,\n  epsilon = epsilon_param,\n  T = T_param\n)\n\n\n\n\nCode\nresultados_largo &lt;- gather(resultados, key = \"moneda\", value = \"recompensa_media\", recompensa_media_A, recompensa_media_B)\n\nresultados_largo %&gt;% \n  ggplot(aes(x = tiempo, y = recompensa_media, color = moneda)) +\n  geom_line(size = 1.2) +\n  geom_hline(aes(yintercept = alpha_param, color = \"Verdadera A\"), linetype = \"dashed\", size = 1) +\n  geom_hline(aes(yintercept = beta_param, color = \"Verdadera B\"), linetype = \"dashed\", size = 1) +\n  labs(title = \"Estimación de Recompensa Media por Moneda\",\n       x = \"Paso de Tiempo\",\n       y = \"Recompensa Media Estimada\",\n       color = \"Moneda\") +\n  scale_color_manual(\n    values = c(\"recompensa_media_A\" = \"blue\", \"recompensa_media_B\" = \"red\", \"Verdadera A\" = \"darkblue\", \"Verdadera B\" = \"darkred\"),\n    labels = c(\"recompensa_media_A\" = expression(hat(alpha)), \"recompensa_media_B\" = expression(hat(beta)), \"Verdadera A\" = \"Verdadera A\", \"Verdadera B\" = \"Verdadera B\")\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\n\nCode\nresultados_conteo &lt;- resultados %&gt;%\n  mutate(\n    conteo_A = cumsum(moneda_elegida == \"A\"),\n    conteo_B = cumsum(moneda_elegida == \"B\")\n  ) %&gt;%\n  select(tiempo, conteo_A, conteo_B) %&gt;%\n  gather(key = \"moneda\", value = \"conteo\", -tiempo)\n\nresultados_conteo  %&gt;% \nggplot(aes(x = tiempo, y = conteo, color = moneda)) +\n  geom_line(size = 1.2) +\n  labs(title = \"Evolución de las Tiradas por Moneda\",\n       subtitle = \"La línea más empinada indica la moneda preferida\",\n       x = \"Paso de Tiempo\",\n       y = \"Número de Tiradas\",\n       color = \"Moneda\") +\n  scale_color_manual(values = c(\"conteo_A\" = \"blue\", \"conteo_B\" = \"red\"), labels = c(\"Moneda A\", \"Moneda B\")) +\n  scale_y_continuous(breaks = seq(0, max(resultados_conteo$conteo), by = 100)) +\n\n  theme_minimal()",
+    "crumbs": [
+      "Clases",
+      "Clase 1"
+    ]
+  },
+  {
+    "objectID": "clases/clase1.html#juego-ligeramente-desbalanceado-pero-con-ε-greedy-con-decay",
+    "href": "clases/clase1.html#juego-ligeramente-desbalanceado-pero-con-ε-greedy-con-decay",
+    "title": "Clase 1",
+    "section": "Juego ligeramente desbalanceado pero con ε-greedy con decay",
+    "text": "Juego ligeramente desbalanceado pero con ε-greedy con decay\n\n\nCode\nset.seed(123)\n\nalpha_param &lt;- 0.51\nbeta_param &lt;- 0.49\nT_param &lt;- 1000\n\nvictorias_A &lt;- 0\ntiradas_A &lt;- 0\nvictorias_B &lt;- 0\ntiradas_B &lt;- 0\n\nresultados &lt;- data.frame(\n  tiempo = 1:T_param,\n  total_recompensa_greedy = numeric(T_param),\n  recompensa_media_A = numeric(T_param),\n  recompensa_media_B = numeric(T_param),\n  eleccion = character(T_param),\n  moneda_elegida = character(T_param),\n  recompensa = numeric(T_param),\n  epsilon_usado = numeric(T_param)\n)\n\nfor (t in 1:T_param) {\n \n  if (t &lt; 100) {\n    epsilon &lt;- 0.9\n  } else if (t == 100) {\n    epsilon &lt;- 0.9\n  } else {\n    \n    decay_rate &lt;- -log(0.001) / (T_param - 100) \n    epsilon &lt;- 0.9 * exp(-decay_rate * (t - 100))\n  }\n\n\n  resultados$epsilon_usado[t] &lt;- epsilon\n  \n  \n  decision &lt;- runif(1)\n  \n  if (decision &lt; epsilon) {\n    moneda_elegida &lt;- sample(c(\"A\", \"B\"), 1)\n    resultados$eleccion[t] &lt;- \"Exploracion\"\n  } \n  else {\n    resultados$eleccion[t] &lt;- \"Mantengo Moneda\"\n    \n    if (tiradas_A == 0 && tiradas_B == 0) {\n      moneda_elegida &lt;- sample(c(\"A\", \"B\"), 1)\n    } \n    else if (tiradas_A == 0) {\n      moneda_elegida &lt;- \"A\"\n    } else if (tiradas_B == 0) {\n      moneda_elegida &lt;- \"B\"\n    } \n    else if ((victorias_A / tiradas_A) &gt; (victorias_B / tiradas_B)) {\n      moneda_elegida &lt;- \"A\"\n    } else {\n      moneda_elegida &lt;- \"B\"\n    }\n  }\n  \n\n  if (moneda_elegida == \"A\") {\n    tiradas_A &lt;- tiradas_A + 1\n    recompensa_greedy &lt;- sample(c(1, 0), 1, prob = c(alpha_param, 1 - alpha_param))\n    victorias_A &lt;- victorias_A + recompensa_greedy\n    resultados$moneda_elegida[t] &lt;- \"A\"\n    resultados$recompensa[t] &lt;- recompensa_greedy\n  } else {\n    tiradas_B &lt;- tiradas_B + 1\n    recompensa_greedy &lt;- sample(c(1, 0), 1, prob = c(beta_param, 1 - beta_param))\n    victorias_B &lt;- victorias_B + recompensa_greedy\n    resultados$moneda_elegida[t] &lt;- \"B\"\n    resultados$recompensa[t] &lt;- recompensa_greedy\n  }\n  \n  resultados$total_recompensa_greedy[t] &lt;- ifelse(t == 1, recompensa_greedy, resultados$total_recompensa_greedy[t-1] + recompensa_greedy)\n  resultados$recompensa_media_A[t] &lt;- ifelse(tiradas_A == 0, NA, victorias_A / tiradas_A)\n  resultados$recompensa_media_B[t] &lt;- ifelse(tiradas_B == 0, NA, victorias_B / tiradas_B)\n}\n\n\n\n\nCode\nresultados  %&gt;% \nggplot(aes(x = tiempo, y = epsilon_usado)) +\n  geom_line(color = \"blue\", size = 1.2) +\n  labs(title = \"Evolución del valor de Epsilon (ε)\",\n       x = \"Paso de Tiempo\",\n       y = \"Valor de Epsilon (ε)\") +\n  theme_minimal() +\n  theme(plot.title = element_text(hjust = 0.5))\n\n\n\n\n\n\n\n\n\n\n\nCode\nresultados_largo &lt;- gather(resultados, key = \"moneda\", value = \"recompensa_media\", recompensa_media_A, recompensa_media_B)\n\nresultados_largo %&gt;% \n  ggplot(aes(x = tiempo, y = recompensa_media, color = moneda)) +\n  geom_line(size = 1.2) +\n  geom_hline(aes(yintercept = alpha_param, color = \"Verdadera A\"), linetype = \"dashed\", size = 1) +\n  geom_hline(aes(yintercept = beta_param, color = \"Verdadera B\"), linetype = \"dashed\", size = 1) +\n  labs(title = \"Estimación de Recompensa Media por Moneda\",\n       x = \"Paso de Tiempo\",\n       y = \"Recompensa Media Estimada\",\n       color = \"Moneda\") +\n  scale_color_manual(\n    values = c(\"recompensa_media_A\" = \"blue\", \"recompensa_media_B\" = \"red\", \"Verdadera A\" = \"darkblue\", \"Verdadera B\" = \"darkred\"),\n    labels = c(\"recompensa_media_A\" = expression(hat(alpha)), \"recompensa_media_B\" = expression(hat(beta)), \"Verdadera A\" = \"Verdadera A\", \"Verdadera B\" = \"Verdadera B\")\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\n\nCode\nresultados_conteo &lt;- resultados %&gt;%\n  mutate(\n    conteo_A = cumsum(moneda_elegida == \"A\"),\n    conteo_B = cumsum(moneda_elegida == \"B\")\n  ) %&gt;%\n  select(tiempo, conteo_A, conteo_B) %&gt;%\n  gather(key = \"moneda\", value = \"conteo\", -tiempo)\n\nresultados_conteo  %&gt;% \nggplot(aes(x = tiempo, y = conteo, color = moneda)) +\n  geom_line(size = 1.2) +\n  labs(title = \"Evolución de las Tiradas por Moneda\",\n       subtitle = \"La línea más empinada indica la moneda preferida\",\n       x = \"Paso de Tiempo\",\n       y = \"Número de Tiradas\",\n       color = \"Moneda\") +\n  scale_color_manual(values = c(\"conteo_A\" = \"blue\", \"conteo_B\" = \"red\"), labels = c(\"Moneda A\", \"Moneda B\")) +\n  scale_y_continuous(breaks = seq(0, max(resultados_conteo$conteo), by = 100)) +\n\n  theme_minimal()",
+    "crumbs": [
+      "Clases",
+      "Clase 1"
+    ]
+  },
+  {
+    "objectID": "calendario.html",
+    "href": "calendario.html",
+    "title": "Calendario del Curso",
+    "section": "",
+    "text": "Semana\nFecha\nTema\nNota\n\n\n\n\n1\n19-Aug-25 Tue\n• Presentación• Introducción procesos estocásticos• Ejemplos variados\n\n\n\n\n21-Aug-25 Thu\n• Recurrencia para proba de ruina• Ecuaciones en diferencias• Fórmula para proba de ruina• Límite cuando \\(S=\\infty\\)\nP1\n\n\n2\n26-Aug-25 Tue\n• Duración media del juego• Recurrencia para duración media• Fórmula para duración media• Límite cuando \\(S=\\infty\\)\nP1\n\n\n\n28-Aug-25 Thu",
+    "crumbs": [
+      "Calendario"
+    ]
+  },
+  {
+    "objectID": "calendario.html#fechas-importantes",
+    "href": "calendario.html#fechas-importantes",
+    "title": "Calendario del Curso",
+    "section": "Fechas Importantes",
+    "text": "Fechas Importantes\n\nInicio del curso: [Fecha de inicio]\nEntrega Práctico 1: [Fecha de entrega]\nExamen Parcial: [Fecha del parcial]\nEntrega Práctico 2: [Fecha de entrega]\nExamen Final: [Fecha del final]",
+    "crumbs": [
+      "Calendario"
+    ]
+  },
+  {
+    "objectID": "index.html#descripción-del-curso",
+    "href": "index.html#descripción-del-curso",
+    "title": "Procesos Estocásticos 2025",
+    "section": "",
+    "text": "Bienvenidos al curso de Procesos Estocásticos IESTA-2025. Esta página contiene todo el material del curso , la página contiente\n\nPrácticos y Soluciones: enunciados de los prácticos aquí. Las soluciones se publicarán a medida que avance el curso.\nClases: apuntes de clase con ejemplos y algunas simulaciones en R/Python.\nCalendario: fechas relevantes + detalle de lo que se dio en cada clase.",
+    "crumbs": [
+      "Procesos Estocásticos 2025"
+    ]
+  },
+  {
+    "objectID": "index.html#docentes-a-cargo",
+    "href": "index.html#docentes-a-cargo",
+    "title": "Procesos Estocásticos 2025",
+    "section": "Docentes a cargo",
+    "text": "Docentes a cargo\n\nMatías Carrasco\nLucca Frachelle",
+    "crumbs": [
+      "Procesos Estocásticos 2025"
+    ]
+  },
+  {
+    "objectID": "index.html#temario",
+    "href": "index.html#temario",
+    "title": "Procesos Estocásticos 2025",
+    "section": "Temario",
+    "text": "Temario\nEste es el temario propuesto para el curso. Se podrá exonerar la parte escrita del examen si se obtiene un mínimo del 40% del total de puntos en cada revisión y un promedio de al menos 60% entre ambas revisiones.\n\nContenido Sintético\n\nProcesos estocásticos: introducción, definiciones, ejemplos.\nProblema de la ruina.\nPaseos aleatorios en tiempo discreto.\nMartingalas.\nAplicaciones a la Optimización y Aproximación Estocástica.\nCadenas de Markov en tiempo discreto.\nStochastic Bandits.\n\n\n\nContenido Desagregado\n\nProcesos estocásticos\n\nIntroducción y motivación.\nDefinición general.\nEjemplos.\n\nProblema de la ruina\n\nCálculo de la probabilidad de ruina.\nTiempo medio de duración del juego.\nRecurrencia y fórmulas explicitas.\nLímite cuando el capital tiende a infinito.\n\nPaseos aleatorios en tiempo discreto\n\nPrincipio de reflexión.\nProbabilidad de retorno.\nTiempo medio de retorno.\nDistribución del primer retorno.\n\nMartingalas\n\nFiltraciones y Esperanza Condicional.\nDefinición, Propiedades y Ejemplos.\nTiempos de parada.\nTeorema del muestreo opcional de Doob.\nAplicaciones al problema de la ruina.\nTeorema de convergencia.\n\nAplicaciones a la Optimización y Aproximación Estocástica\n\nTeorema de Robbins-Monro.\nDescenso Estocástico de Gradiente.\nAplicaciones en Optimización y Machine Learning.\n\nCadenas de Markov en tiempo discreto\n\nPropiedad de Markov, Matriz de transición, Ejemplos de CM.\nCadenas absorbentes.\nProbabilidad y tiempo medio de absorción.\nAplicaciones al problema de la ruina.\nCadenas ergódicas.\nTiempo de primer retorno.\nNúmero medio de retornos.\nEstados recurrentes y transitorios.\nRecurrencia positiva y nula.\nPeriodicidad y Aperiodicidad.\nDistribución límite.\nEstacionariedad.\nPropiedad Fuerte de Markov.\nTeorema Ergódico.\nAplicaciones a los Modelos de Lenguaje.\n\nStochastic Bandits\n\nFormulación del problema clásico.\nRegret esperado y cotas.\nAlgoritmos: \\(\\epsilon\\)-greedy, UCB, Thompson Sampling.\nComparaciones empíricas.\nAplicaciones modernas.",
+    "crumbs": [
+      "Procesos Estocásticos 2025"
+    ]
+  },
+  {
+    "objectID": "index.html#evaluación",
+    "href": "index.html#evaluación",
+    "title": "Procesos Estocásticos 2025",
+    "section": "Evaluación",
+    "text": "Evaluación\nEl sistema de evaluación incluye dos revisiones. La primera tiene un puntaje máximo de 50 y mínimo de 20, mientras que la segunda también tiene un máximo de 50 y un mínimo de 20. La calificación total es de 100 puntos, con un mínimo de 60 para aprobar.\n\nFechas de revisión\n\nPrimera revisión: 10 de octubre de 2025\nSegunda revisión: 04 de diciembre de 2025",
+    "crumbs": [
+      "Procesos Estocásticos 2025"
+    ]
+  },
+  {
+    "objectID": "index.html#bibliografía",
+    "href": "index.html#bibliografía",
+    "title": "Procesos Estocásticos 2025",
+    "section": "Bibliografía",
+    "text": "Bibliografía\n\nLanchier, Nicolas. Stochastic modeling. Berlin: Springer, 2017.\nPrivault, Nicolas (2013). Understanding Markov Chains. Examples and Applications, Springer, ISBN 978-981-4451-51-2 (eBook).\nPetrov and Mordecki. Teoría de la probabilidad. Dirac, 2008.\nWalton, Neil. Stochastic Control. (2021).",
+    "crumbs": [
+      "Procesos Estocásticos 2025"
     ]
   }
 ]

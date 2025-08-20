@@ -1,0 +1,10 @@
+---
+title: "Calendario del Curso"
+---
+
+| Semana | Fecha | Tema | Nota |
+|---|---|---|---|
+| 1 | 19-Aug-25 Tue | • Presentación<br/>• Introducción procesos estocásticos<br/>• Ejemplos variados | |
+| | 21-Aug-25 Thu | • Recurrencia para proba de ruina<br/>• Ecuaciones en diferencias<br/>• Fórmula para proba de ruina<br/>• Límite cuando $S=\infty$ | [P1](practico1-letra.qmd) |
+| 2 | 26-Aug-25 Tue | • Duración media del juego<br/>• Recurrencia para duración media<br/>• Fórmula para duración media<br/>• Límite cuando $S=\infty$ | [P1](practico1-letra.qmd) |
+| | 28-Aug-25 Thu | | |
