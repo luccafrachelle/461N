@@ -11,9 +11,9 @@ format:
 
 Bienvenidos al curso de **Procesos Estocásticos IESTA-2025**. Esta página contiene todo el material del curso , la página contiente
 
-*   **Prácticos y Soluciones:**  [enunciados de los prácticos aquí](practicos_letra/practicos.qmd). Las soluciones se publicarán a medida que avance el curso.
-*   **Clases:** [apuntes de clase con  ejemplos y algunas simulaciones en R/Python](clases/clase1.qmd).
-*   **Calendario:**  [fechas relevantes + detalle de lo que se dio en cada clase](calendario.qmd).
+*   **Prácticos y Soluciones:**  [enunciados de los prácticos aquí](practicos_letra/practicos.html). Las soluciones se publicarán a medida que avance el curso.
+*   **Clases:** [apuntes de clase con  ejemplos y algunas simulaciones en R/Python](clases/clase1.html).
+*   **Calendario:**  [fechas relevantes + detalle de lo que se dio en cada clase](calendario.html).
 
 ## Docentes a cargo
 
