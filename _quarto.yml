@@ -5,9 +5,10 @@ project:
   output-dir: docs
   render: 
       - index.qmd
-      - practicos.qmd
-      - practico1-letra.qmd
-      - practico1-solucion.qmd
+      - practicos_letra/practicos.qmd
+      - practicos_letra/practico1-letra.qmd
+      - practicos_solucion/practico1-solucion.qmd
+      - clases/semana1.qmd
 
 website:
   title: "461N"
@@ -18,10 +19,13 @@ website:
       - index.qmd
       - text: "Practicos"
         contents:
-          - practico1-letra.qmd
+          - practicos_letra/practico1-letra.qmd
       - text: "Soluciones"
         contents:
-          - practico1-solucion.qmd
+          - practicos_solucion/practico1-solucion.qmd
+      - text: "Clases"
+        contents:
+          - clases/semana1.qmd
   page-navigation: true
 
 
