@@ -19,18 +19,20 @@ website:
     contents:
       - index.qmd
       - text: "Calendario"
-        file: calendario.qmd
+        file: calendario.html
       - text: "Practicos"
       
         contents:
-          - practicos_letra/practico1-letra.qmd
+          - text: "Practico 1"
+            file: practicos_letra/practico1-letra.html
       - text: "Soluciones"
         contents:
-          - practicos_solucion/practico1-solucion.qmd
+          - text: "Solución Practico 1"
+            file: practicos_solucion/practico1-solucion.html
       - text: "Clases"
         contents:
           - text: "Clase 1"
-            file: clases/clase1.qmd
+            file: clases/clase1.html
      
   page-navigation: true
 
